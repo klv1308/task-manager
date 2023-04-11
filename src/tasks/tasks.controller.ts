@@ -6,25 +6,35 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { TaskDto } from './dto/task.dto';
 
 @ApiTags('Tasks')
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
+  @ApiCreatedResponse({ type: TaskDto })
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  async create(@Body() createTaskDto: CreateTaskDto): Promise<TaskDto> {
+    return await this.tasksService.create(createTaskDto);
   }
 
+  @ApiCreatedResponse({ type: TaskDto, isArray: true })
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  async findAll(): Promise<TaskDto[]> {
+    return await this.tasksService.findAll();
   }
+
+  // @Get('forbidden')
+  // forbidden() {
+  //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+  // }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
