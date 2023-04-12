@@ -3,19 +3,25 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TASK_REPOSITORY } from 'src/constants';
 import { Task } from './entities/task.entity';
 import { TaskDto } from './dto/task.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class TasksService {
   constructor(
     @Inject(TASK_REPOSITORY) private readonly userRepository: typeof Task,
+    @InjectMapper() private readonly classMapper: Mapper,
   ) {}
 
-  async create(task: CreateTaskDto): Promise<TaskDto> {
-    return await this.userRepository.create<Task>(task);
+  async create(сreateTaskDto: CreateTaskDto): Promise<TaskDto> {
+    // const taskEntity = this.classMapper.map(сreateTaskDto, CreateTaskDto, Task);
+    const result = await this.userRepository.create<Task>(сreateTaskDto);
+    return this.classMapper.map(result, Task, TaskDto);
   }
 
   async findAll(): Promise<TaskDto[]> {
-    return await this.userRepository.findAll<Task>();
+    const tasks = await this.userRepository.findAll<Task>();
+    return this.classMapper.mapArrayAsync(tasks, Task, TaskDto);
   }
 
   // findOne(id: number) {

@@ -7,10 +7,13 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { UsersController } from './users/users.controller';
 import { TasksController } from './tasks/tasks.controller';
 import configuration from './configuration';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
+    AutomapperModule.forRoot({ strategyInitializer: classes() }),
     UsersModule,
     TasksModule,
     DatabaseModule,
