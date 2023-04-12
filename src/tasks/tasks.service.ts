@@ -13,8 +13,10 @@ export class TasksService {
     @InjectMapper() private readonly classMapper: Mapper,
   ) {}
 
-  async create(task: CreateTaskDto): Promise<TaskDto> {
-    return await this.userRepository.create<Task>(task);
+  async create(сreateTaskDto: CreateTaskDto): Promise<TaskDto> {
+    // const taskEntity = this.classMapper.map(сreateTaskDto, CreateTaskDto, Task);
+    const result = await this.userRepository.create<Task>(сreateTaskDto);
+    return this.classMapper.map(result, Task, TaskDto);
   }
 
   async findAll(): Promise<TaskDto[]> {
